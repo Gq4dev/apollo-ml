@@ -1,17 +1,25 @@
-import { ApolloServer } from "@apollo/server";
-const types = require("./types/types");
-const resolvers = require("./resolvers/queries");
+import { ApolloServer } from '@apollo/server';
+import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
 
-import {
-  startServerAndCreateLambdaHandler,
-  handlers,
-} from "@as-integrations/aws-lambda";
+
+// const typeDefs = `#graphql
+//   type Query {
+//     hello: String
+//   }
+// `;
+
+// const resolvers = {
+//   Query: {
+//     hello: () => 'world',
+//   },
+// };
 
 const server = new ApolloServer({
-  typeDefs: [types],
-  resolvers: [resolvers],
+  typeDefs,
+  resolvers,
 });
 
+// This final export is important!
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(
   server,

@@ -1,11 +1,13 @@
-const { gql } = require("apollo-server");
 
-const types = gql`
+const types = `
   type User {
     id: ID!
     nickname: String!
     email: String!
     # Add other relevant fields as needed
+  }
+  type Query {
+    hello: String
   }
 
   extend type Query {
@@ -13,4 +15,4 @@ const types = gql`
   }
 `;
 
-module.exports = types;
+export default types;

@@ -1,9 +1,9 @@
 // userResolvers.js
-const axios = require("axios");
+import axios from "axios";
 
 const MERCADOLIBRE_API_URL = "https://api.mercadolibre.com";
 
-const queries = {
+const resolvers = {
   Query: {
     getUserInfo: async (_, { userId }) => {
       try {
@@ -28,7 +28,8 @@ const queries = {
         return null;
       }
     },
+    hello: () => "world",
   },
 };
 
-module.exports = queries;
+export default resolvers;

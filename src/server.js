@@ -1,22 +1,21 @@
-import { ApolloServer } from '@apollo/server';
-import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
+import { ApolloServer } from "@apollo/server";
+import types from "./types/types.js";
+import resolvers from "./resolvers/index.js";
 
-
-// const typeDefs = `#graphql
-//   type Query {
-//     hello: String
-//   }
-// `;
+import {
+  startServerAndCreateLambdaHandler,
+  handlers,
+} from "@as-integrations/aws-lambda";
 
 // const resolvers = {
 //   Query: {
-//     hello: () => 'world',
+//     hello: () => "world",
 //   },
 // };
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: types,
+  resolvers: resolvers,
 });
 
 // This final export is important!
@@ -24,5 +23,5 @@ const server = new ApolloServer({
 export const graphqlHandler = startServerAndCreateLambdaHandler(
   server,
   // We will be using the Proxy V2 handler
-  handlers.createAPIGatewayProxyEventV2RequestHandler(),
+  handlers.createAPIGatewayProxyEventV2RequestHandler()
 );

@@ -13,13 +13,13 @@ const resolvers = {
         );
 
         // Extract relevant user information from the API response
-        const { id, nickname, email } = response.data;
+        const { id, nickname, site_id } = response.data;
 
         // Return the user information
         return {
           id,
           nickname,
-          email,
+          site_id,
           // Add other relevant fields as needed
         };
       } catch (error) {

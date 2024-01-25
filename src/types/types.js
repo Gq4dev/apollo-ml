@@ -1,18 +1,22 @@
+const types = `#graphql
 
-const types = `
   type User {
-    id: ID!
-    nickname: String!
-    email: String!
-    # Add other relevant fields as needed
-  }
-  type Query {
-    hello: String
+    id: ID!  
+    nickname: String! 
+    site_id: String! 
   }
 
-  extend type Query {
-    getUserInfo(userId: String!): User
+  type Query @rateLimit(limit: 5, duration: 30){
+    hello: String 
+    feed : Feed! 
+    getUserInfo(userId: String!): User 
   }
+
+  type Feed {
+    id: ID!
+    count: Int!
+  }
+
 `;
 
 export default types;

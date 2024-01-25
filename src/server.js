@@ -1,24 +1,43 @@
 import { ApolloServer } from "@apollo/server";
 import types from "./types/types.js";
 import resolvers from "./resolvers/index.js";
-
+import { startStandaloneServer } from "@apollo/server/standalone";
 import {
   startServerAndCreateLambdaHandler,
   handlers,
 } from "@as-integrations/aws-lambda";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import {
+  defaultKeyGenerator,
+  rateLimitDirective,
+} from "graphql-rate-limit-directive";
 
-// const resolvers = {
-//   Query: {
-//     hello: () => "world",
-//   },
-// };
+const keyGenerator = (directiveArgs, source, args, context, info) =>
+  `${context.ip}:${defaultKeyGenerator(
+    directiveArgs,
+    source,
+    args,
+    context,
+    info
+  )}`;
 
-const server = new ApolloServer({
-  typeDefs: types,
+const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
+  rateLimitDirective({
+    keyGenerator,
+  });
+
+let schema = makeExecutableSchema({
+  typeDefs: [types, rateLimitDirectiveTypeDefs],
   resolvers: resolvers,
 });
 
-// This final export is important!
+schema = rateLimitDirectiveTransformer(schema);
+
+const server = new ApolloServer({
+  schema,
+});
+
+// // This final export is important!
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(
   server,

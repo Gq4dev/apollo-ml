@@ -3,7 +3,7 @@ const types = `
   type User {
     id: ID!
     nickname: String!
-    email: String!
+    site_id: String!
     # Add other relevant fields as needed
   }
   type Query {

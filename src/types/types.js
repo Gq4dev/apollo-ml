@@ -6,13 +6,19 @@ const types = `
     site_id: String!
     # Add other relevant fields as needed
   }
-  type Query {
-    hello: String
+
+  type Book {
+    title: String
+    author: String
   }
 
-  extend type Query {
+  type Query @rateLimit(limit: 10, duration: 15) {
+    hello: String
+    books: [Book!]
+    quote: String
     getUserInfo(userId: String!): User
   }
+
 `;
 
 export default types;

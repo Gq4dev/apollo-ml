@@ -1,10 +1,10 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
-const { User } = require("./types/objects.js");
-const { resolvers, Query } = require("./resolvers/queries.js");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { printType, G } = require("graphql");
-const schema = require("./schema");
+const types = require("./types/types");
+const queries = require("./types/queries");
+const resolvers = require("./resolvers/queries");
 
 // Deploy serverless
 const {
@@ -43,7 +43,12 @@ const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
     limiterClass: DebugRateLimiterMemory,
   });
 
-const schemaM = rateLimitDirectiveTransformer(schema.privateSchema);
+const schema = makeExecutableSchema({
+  typeDefs: [types, queries, rateLimitDirectiveTypeDefs],
+  resolvers,
+});
+
+const schemaM = rateLimitDirectiveTransformer(schema);
 
 const server = new ApolloServer({
   schema: schemaM,

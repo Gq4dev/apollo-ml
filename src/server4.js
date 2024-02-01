@@ -47,10 +47,14 @@ const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
 const sdlStrings = typesObjects.map((type) => printType(type));
 const combinedSDL = sdlStrings.join("\n\n");
 
+// const sdlResolvers = resolvers.map((resolver) => printType(resolver));
+// const resolversSDL = sdlResolvers.join("\n\n");
+
 console.log(combinedSDL);
+
 const schema = makeExecutableSchema({
   typeDefs: [combinedSDL, queries, rateLimitDirectiveTypeDefs],
-  resolvers,
+  resolvers: [resolvers],
 });
 
 const schemaM = rateLimitDirectiveTransformer(schema);
@@ -59,16 +63,19 @@ const server = new ApolloServer({
   schema: schemaM,
 });
 
-const { url } = startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+async function runServer() {
+  const { url } = await startStandaloneServer(server);
+  console.log(`Server running at ${url}`);
+}
 
-console.log(`🚀  Server ready at: ${url}`);
-
+runServer().catch((error) => console.error(error));
 // This final export is important!
 
-// export const graphqlHandler = startServerAndCreateLambdaHandler(
+// Define the GraphQL handler for AWS Lambda
+// const graphqlHandler = startServerAndCreateLambdaHandler(
 //   server,
-//   // We will be using the Proxy V2 handler
 //   handlers.createAPIGatewayProxyEventV2RequestHandler()
 // );
+
+// // Export the GraphQL handler
+// module.exports = { graphqlHandler };

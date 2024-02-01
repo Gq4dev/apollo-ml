@@ -30,4 +30,5 @@ const Data = new G.GraphQLObjectType({
   },
 });
 
+
 module.exports = [User, Data];

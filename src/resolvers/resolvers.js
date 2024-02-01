@@ -1,14 +1,15 @@
-// userResolvers.js
 const axios = require("axios");
-
-const MERCADOLIBRE_API_URL = "https://api.mercadolibre.com";
+const MERCADOLIBRE_API_URL = "https://api.mercadolibre.com"; // Replace with your actual API URL
 
 const resolvers = {
   Query: {
-    getUserInfo: async () => {
+    async getUserInfo(_, { userId }) {
+      console.log("Entre", userId);
       try {
         // Make a request to MercadoLibre API to get user information
-        const response = await axios.get(`${MERCADOLIBRE_API_URL}/users/1519`);
+        const response = await axios.get(
+          `${MERCADOLIBRE_API_URL}/users/${userId}`
+        );
 
         // Extract relevant user information from the API response
         const { id, nickname, site_id } = response.data;
@@ -18,7 +19,6 @@ const resolvers = {
           id,
           nickname,
           site_id,
-
           // Add other relevant fields as needed
         };
       } catch (error) {
@@ -27,10 +27,12 @@ const resolvers = {
         return null;
       }
     },
-    getUserData: async () => {
+    async getUserData(parent, { userId }, context, info) {
       try {
         // Make a request to MercadoLibre API to get user information
-        const response = await axios.get(`${MERCADOLIBRE_API_URL}/users/1519`);
+        const response = await axios.get(
+          `${MERCADOLIBRE_API_URL}/users/${userId}`
+        );
 
         // Extract relevant user information from the API response
         const { id, nickname, user_type } = response.data;
@@ -40,7 +42,6 @@ const resolvers = {
           id,
           nickname,
           user_type,
-
           // Add other relevant fields as needed
         };
       } catch (error) {
@@ -51,4 +52,5 @@ const resolvers = {
     },
   },
 };
+
 module.exports = resolvers;

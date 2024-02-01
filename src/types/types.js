@@ -3,6 +3,7 @@ const types = `
     id: ID!
     nickname: String!
     site_id: String!
+    user_type: String!
     # Add other relevant fields as needed
   }
 

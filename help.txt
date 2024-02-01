@@ -1,17 +1,4 @@
-const G = require("graphql");
-
-const User = new G.GraphQLObjectType({
-  name: "User",
-  fields: {
-    id: {
-      type: G.GraphQLID,
-    },
-    nickname: {
-      type: G.GraphQLString,
-    },
-    site_id: {
-      type: G.GraphQLString,
-      astNode: {
+ astNode: {
         directives: [
           {
             kind: "Directive",
@@ -45,30 +32,3 @@ const User = new G.GraphQLObjectType({
           },
         ],
       },
-    },
-  },
-});
-
-// const types = `
-//   type User {
-//     id: ID!
-//     nickname: String!
-//     site_id: String!
-//     # Add other relevant fields as needed
-//   }
-
-//   type Book {
-//     title: String
-//     author: String
-//   }
-
-//   type Query @rateLimit(limit: 10, duration: 15) {
-//     hello: String
-//     books: [Book!]
-//     quote: String
-//     getUserInfo(userId: String!): User
-//   }
-
-// `;
-
-module.exports =  {User} ;

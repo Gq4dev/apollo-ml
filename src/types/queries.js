@@ -1,10 +1,9 @@
 const queries = `
-type Query @rateLimit(limit: 5, duration: 15) {
-    hello: String
-    books: [Book!]
-    quote: String
-    getUserInfo(userId: String!): User
+type Query {
+    getUserInfo(userId: String!): User @rateLimit(limit: 5, duration: 15) 
+    getUserData(userId: String!): Data
   }
+  
 `;
 
 module.exports = queries;

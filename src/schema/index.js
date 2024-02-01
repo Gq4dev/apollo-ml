@@ -1,22 +1,17 @@
-import { graphql as G } from "graphql";
+const G = require("graphql");
+const queries = require("./queries.js");
 
 const rootQuery = new G.GraphQLObjectType({
   name: "RootQueryType",
   fields: {
-    sites: queries.sites,
+    getUserInfo: queries.user,
   },
 });
 
-
 const privateSchema = new G.GraphQLSchema({
-    query: rootQuery,
-    mutation: rootMutation,
-    directives: [RateLimitDirective, upperFirst],
-  });
-  
-  
-  
-  module.exports = {
-    privateSchema,
-  };
-  
+  query: rootQuery,
+});
+
+module.exports = {
+  privateSchema
+};

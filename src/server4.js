@@ -1,21 +1,23 @@
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import types from "./types/types.js";
-import resolvers from "./resolvers/index.js";
-import { makeExecutableSchema } from '@graphql-tools/schema';
+const { ApolloServer } = require("@apollo/server");
+const { startStandaloneServer } = require("@apollo/server/standalone");
+const { User } = require("./types/objects.js");
+const { resolvers, Query } = require("./resolvers/queries.js");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const { printType, G } = require("graphql");
+const schema = require("./schema");
 
 // Deploy serverless
-import {
+const {
   startServerAndCreateLambdaHandler,
   handlers,
-} from "@as-integrations/aws-lambda";
+} = require("@as-integrations/aws-lambda");
 
 // Rate Limiter
-import {
+const {
   rateLimitDirective,
   defaultKeyGenerator,
-} from "graphql-rate-limit-directive";
-import { RateLimiterMemory } from "rate-limiter-flexible";
+} = require("graphql-rate-limit-directive");
+const { RateLimiterMemory } = require("rate-limiter-flexible");
 
 class DebugRateLimiterMemory extends RateLimiterMemory {
   consume(key, pointsToConsume, options) {
@@ -41,27 +43,22 @@ const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
     limiterClass: DebugRateLimiterMemory,
   });
 
-let schema = makeExecutableSchema({
-  typeDefs: [rateLimitDirectiveTypeDefs, types],
-  resolvers,
-});
-
-schema = rateLimitDirectiveTransformer(schema);
+const schemaM = rateLimitDirectiveTransformer(schema.privateSchema);
 
 const server = new ApolloServer({
-  schema,
+  schema: schemaM,
 });
 
-// const { url } = await startStandaloneServer(server, {
-//   listen: { port: 4000 },
-// });
+const { url } = startStandaloneServer(server, {
+  listen: { port: 4000 },
+});
 
-// console.log(`🚀  Server ready at: ${url}`);
+console.log(`🚀  Server ready at: ${url}`);
 
 // This final export is important!
 
-export const graphqlHandler = startServerAndCreateLambdaHandler(
-  server,
-  // We will be using the Proxy V2 handler
-  handlers.createAPIGatewayProxyEventV2RequestHandler()
-);
+// export const graphqlHandler = startServerAndCreateLambdaHandler(
+//   server,
+//   // We will be using the Proxy V2 handler
+//   handlers.createAPIGatewayProxyEventV2RequestHandler()
+// );
